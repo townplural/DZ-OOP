@@ -1,10 +1,12 @@
 class Student:
+    l_student = []
     def __init__(self, name, surname):
         self.name = name
         self.surname = surname
         self.finished_courses = []
         self.courses_in_progress = []
         self.grades = {}
+        Student.l_student.append(self)
 
     def rate_lecturer(self, lecturer, course, grade):
         if isinstance(lecturer, Lecturer) and course in self.courses_in_progress and course in lecturer.courses_attached:
@@ -47,11 +49,18 @@ class Lecturer(Mentor):
         self.courses_attached = []
         self.coursses_grades = {}
 
+
     def __str__(self):
         print(f'Имя: {self.name}')
         print(f'Фамилия: {self.surname}')
         print(f'Средняя оценка за лекции: {str(self.average_grades())}')
         return ''
+
+    def __lt__(self, other):
+        if not isinstance(other, Lecturer):
+            print('Ошибка')
+            return
+        return self.average_grades() < other.average_grades()
 
     def average_grades(self):
         counter = 0
@@ -85,23 +94,44 @@ class Reviewer(Mentor):
 
 
 best_student = Student('Pam', 'Param')
+best_student2 = Student('Pam2', 'Param2')
 best_reviewer = Reviewer('Param', 'Pam')
+best_reviewer2 = Reviewer('Param2', 'Pam2')
 best_lecturer = Lecturer('Pam', 'Pam')
+best_lecturer2 = Lecturer('Pam2', 'Pam2')
 
 
 best_student.courses_in_progress += ['Python']
 best_student.courses_in_progress += ['Java']
+best_student2.courses_in_progress += ['Python']
+best_student2.courses_in_progress += ['Java']
 
 best_reviewer.courses_attached += ['Python']
 best_reviewer.courses_attached += ['Java']
+best_reviewer2.courses_attached += ['Python']
+best_reviewer2.courses_attached += ['Java']
 
 best_lecturer.courses_attached += ['Java']
 best_lecturer.courses_attached += ['Python']
+best_lecturer2.courses_attached += ['Java']
+best_lecturer2.courses_attached += ['Python']
+
 
 best_reviewer.rate_hw(best_student, 'Java', 10)
 best_reviewer.rate_hw(best_student, 'Java', 5)
 best_reviewer.rate_hw(best_student, 'Java', 2)
 best_reviewer.rate_hw(best_student, 'Java', 3)
+
+best_student.rate_lecturer(best_lecturer2, 'Java', 10)
+best_student.rate_lecturer(best_lecturer2, 'Java', 3)
+best_student.rate_lecturer(best_lecturer2, 'Java', 6)
+best_student.rate_lecturer(best_lecturer2, 'Java', 2)
+
+best_student.rate_lecturer(best_lecturer2, 'Python', 2)
+best_student.rate_lecturer(best_lecturer2, 'Python', 4)
+best_student.rate_lecturer(best_lecturer2, 'Python', 4)
+best_student.rate_lecturer(best_lecturer2, 'Python', 4)
+
 
 
 best_student.rate_lecturer(best_lecturer, 'Java', 10)
@@ -115,11 +145,14 @@ best_student.rate_lecturer(best_lecturer, 'Python', 9)
 best_student.rate_lecturer(best_lecturer, 'Python', 9)
 
 
-#print(best_student.grades)
-#print(best_student.average_grades())
-#print(best_lecturer.coursses_grades)
-#print(best_lecturer.average_grades())
-#print(best_lecturer.average_grades())
+
+
+
+
+
+
+#print(best_lecturer < best_lecturer2)
+
 
 
 #print(best_student)
